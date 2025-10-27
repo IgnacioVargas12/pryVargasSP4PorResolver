@@ -113,6 +113,8 @@
 
         private void btnConsultarTotal_Click(object sender, EventArgs e)
         {
+            if (!ValidarDatos())
+                return;
             for (indiceColumnas = 1; indiceColumnas < 5; indiceColumnas++)
             {
                 TotalAux = 0;
