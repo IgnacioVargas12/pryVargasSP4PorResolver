@@ -30,6 +30,7 @@
         {
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPrincipal));
             dgvDatos = new DataGridView();
             ColMozos = new DataGridViewTextBoxColumn();
             colComidas = new DataGridViewTextBoxColumn();
@@ -41,7 +42,10 @@
             btnValidar = new Button();
             lblMozoDia = new Label();
             lblMontoMozo = new Label();
-            listBox1 = new ListBox();
+            lstResultados = new ListBox();
+            lblNombreMozo = new Label();
+            lblMontoIndiv = new Label();
+            btnCerrar = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvDatos).BeginInit();
             SuspendLayout();
             // 
@@ -59,9 +63,8 @@
             dgvDatos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvDatos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDatos.Columns.AddRange(new DataGridViewColumn[] { ColMozos, colComidas, ColBebidasSinAlcohol, ColBebidasConAlcohol, ColPostre });
-            dgvDatos.Location = new Point(94, 12);
+            dgvDatos.Location = new Point(12, 12);
             dgvDatos.Name = "dgvDatos";
-            dgvDatos.ReadOnly = true;
             dgvDatos.RowHeadersVisible = false;
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvDatos.RowsDefaultCellStyle = dataGridViewCellStyle2;
@@ -72,63 +75,61 @@
             // 
             ColMozos.HeaderText = "Mozos";
             ColMozos.Name = "ColMozos";
-            ColMozos.ReadOnly = true;
             // 
             // colComidas
             // 
             colComidas.HeaderText = "Comidas";
             colComidas.Name = "colComidas";
-            colComidas.ReadOnly = true;
             // 
             // ColBebidasSinAlcohol
             // 
             ColBebidasSinAlcohol.HeaderText = "Bebidas Sin Alcohol";
             ColBebidasSinAlcohol.Name = "ColBebidasSinAlcohol";
-            ColBebidasSinAlcohol.ReadOnly = true;
             // 
             // ColBebidasConAlcohol
             // 
             ColBebidasConAlcohol.HeaderText = "Bebidas Con Alcohol";
             ColBebidasConAlcohol.Name = "ColBebidasConAlcohol";
-            ColBebidasConAlcohol.ReadOnly = true;
             // 
             // ColPostre
             // 
             ColPostre.HeaderText = "Postre";
             ColPostre.Name = "ColPostre";
-            ColPostre.ReadOnly = true;
             // 
             // btnConsultarMozo
             // 
-            btnConsultarMozo.Location = new Point(52, 360);
+            btnConsultarMozo.Location = new Point(8, 230);
             btnConsultarMozo.Name = "btnConsultarMozo";
             btnConsultarMozo.Size = new Size(86, 32);
             btnConsultarMozo.TabIndex = 1;
             btnConsultarMozo.Text = "Mozo del día";
             btnConsultarMozo.UseVisualStyleBackColor = true;
+            btnConsultarMozo.Click += btnConsultarMozo_Click;
             // 
             // btnConsultarTotal
             // 
-            btnConsultarTotal.Location = new Point(336, 360);
+            btnConsultarTotal.Location = new Point(245, 230);
             btnConsultarTotal.Name = "btnConsultarTotal";
             btnConsultarTotal.Size = new Size(86, 32);
             btnConsultarTotal.TabIndex = 2;
             btnConsultarTotal.Text = "Totales";
             btnConsultarTotal.UseVisualStyleBackColor = true;
+            btnConsultarTotal.Click += btnConsultarTotal_Click;
             // 
             // btnValidar
             // 
-            btnValidar.Location = new Point(593, 360);
+            btnValidar.Location = new Point(452, 230);
             btnValidar.Name = "btnValidar";
             btnValidar.Size = new Size(86, 32);
             btnValidar.TabIndex = 3;
             btnValidar.Text = "Validar datos";
             btnValidar.UseVisualStyleBackColor = true;
+            btnValidar.Click += btnValidar_Click;
             // 
             // lblMozoDia
             // 
             lblMozoDia.AutoSize = true;
-            lblMozoDia.Location = new Point(52, 404);
+            lblMozoDia.Location = new Point(8, 274);
             lblMozoDia.Name = "lblMozoDia";
             lblMozoDia.Size = new Size(78, 15);
             lblMozoDia.TabIndex = 4;
@@ -137,27 +138,58 @@
             // lblMontoMozo
             // 
             lblMontoMozo.AutoSize = true;
-            lblMontoMozo.Location = new Point(52, 431);
+            lblMontoMozo.Location = new Point(8, 301);
             lblMontoMozo.Name = "lblMontoMozo";
             lblMontoMozo.Size = new Size(46, 15);
             lblMontoMozo.TabIndex = 5;
             lblMontoMozo.Text = "Monto:";
             // 
-            // listBox1
+            // lstResultados
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
-            listBox1.Location = new Point(336, 404);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(120, 94);
-            listBox1.TabIndex = 6;
+            lstResultados.FormattingEnabled = true;
+            lstResultados.ItemHeight = 15;
+            lstResultados.Location = new Point(199, 274);
+            lstResultados.Name = "lstResultados";
+            lstResultados.Size = new Size(181, 124);
+            lstResultados.TabIndex = 6;
+            // 
+            // lblNombreMozo
+            // 
+            lblNombreMozo.AutoSize = true;
+            lblNombreMozo.Location = new Point(92, 274);
+            lblNombreMozo.Name = "lblNombreMozo";
+            lblNombreMozo.Size = new Size(22, 15);
+            lblNombreMozo.TabIndex = 7;
+            lblNombreMozo.Text = "---";
+            // 
+            // lblMontoIndiv
+            // 
+            lblMontoIndiv.AutoSize = true;
+            lblMontoIndiv.Location = new Point(92, 301);
+            lblMontoIndiv.Name = "lblMontoIndiv";
+            lblMontoIndiv.Size = new Size(22, 15);
+            lblMontoIndiv.TabIndex = 8;
+            lblMontoIndiv.Text = "---";
+            // 
+            // btnCerrar
+            // 
+            btnCerrar.Location = new Point(452, 284);
+            btnCerrar.Name = "btnCerrar";
+            btnCerrar.Size = new Size(85, 32);
+            btnCerrar.TabIndex = 9;
+            btnCerrar.Text = "Cerrar";
+            btnCerrar.UseVisualStyleBackColor = true;
+            btnCerrar.Click += btnCerrar_Click;
             // 
             // frmPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 529);
-            Controls.Add(listBox1);
+            ClientSize = new Size(549, 423);
+            Controls.Add(btnCerrar);
+            Controls.Add(lblMontoIndiv);
+            Controls.Add(lblNombreMozo);
+            Controls.Add(lstResultados);
             Controls.Add(lblMontoMozo);
             Controls.Add(lblMozoDia);
             Controls.Add(btnValidar);
@@ -165,6 +197,7 @@
             Controls.Add(btnConsultarMozo);
             Controls.Add(dgvDatos);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "frmPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Consulta";
@@ -182,11 +215,14 @@
         private Button btnValidar;
         private Label lblMozoDia;
         private Label lblMontoMozo;
-        private ListBox listBox1;
+        private ListBox lstResultados;
         private DataGridViewTextBoxColumn ColMozos;
         private DataGridViewTextBoxColumn colComidas;
         private DataGridViewTextBoxColumn ColBebidasSinAlcohol;
         private DataGridViewTextBoxColumn ColBebidasConAlcohol;
         private DataGridViewTextBoxColumn ColPostre;
+        private Label lblNombreMozo;
+        private Label lblMontoIndiv;
+        private Button btnCerrar;
     }
 }
