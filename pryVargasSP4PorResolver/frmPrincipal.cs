@@ -33,6 +33,14 @@
             dgvDatos.Rows.Add("Gonzalo");
             dgvDatos.Rows.Add("Alberto");
 
+            //No permitimos cambiar la columna de los mozos
+            while (indiceFilas < 5)
+            {
+                dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].ReadOnly = true;
+                indiceFilas++;
+            }
+            
+
             //Inicializamos la grilla con valor 0 en todas las posiciones
             for (indiceFilas = 0; indiceFilas < 5; indiceFilas++)
             {
@@ -90,6 +98,7 @@
                     {
                         MessageBox.Show($"Hay una celda vacía en la fila {indiceFilas + 1}, columna {indiceColumnas + 1}.",
                             "Dato faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Red;
 
                         btnConsultarTotal.Enabled = false;
                         btnConsultarMozo.Enabled = false;
@@ -104,6 +113,7 @@
                     {
                         MessageBox.Show($"El valor en la fila {indiceFilas + 1}, columna {indiceColumnas + 1} no es numérico.",
                             "Dato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Red;
 
                         btnConsultarTotal.Enabled = false;
                         btnConsultarMozo.Enabled = false;
@@ -112,36 +122,39 @@
                 }
             }
 
-            //Validación de la columna de nombres, que sea texto
-            for (int fila = 0; fila < 5; fila++)
-            {
-                //Utilizamos el object para almacenar el valor de la celda y evitar errores si esta vacía
-                object valorCelda = dgvDatos.Rows[fila].Cells[0].Value;
-                string texto = Convert.ToString(valorCelda);
-
-                if (string.IsNullOrWhiteSpace(texto))
-                {
-                    MessageBox.Show($"El nombre en la fila {fila + 1} está vacío.", 
-                        "Dato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    btnConsultarMozo.Enabled = false;
-                    btnConsultarTotal.Enabled = false;
-                    return false; // sale de la función enseguida
-                }
-
-                //Si puedo convertirlo en número, entra al if y deshabilita los demas controles
-                if (double.TryParse(texto, out _))
-                {
-                    MessageBox.Show($"El nombre en la fila {fila + 1} no puede ser un número.", 
-                        "Dato incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    btnConsultarMozo.Enabled = false;
-                    btnConsultarTotal.Enabled = false;
-                    return false;
-                }
-            }
-
             //Si pasó todas las validaciones
             btnConsultarMozo.Enabled = true;
             btnConsultarTotal.Enabled = true;
+
+            //Pintamos los amarillos si tienen valor 0, y blanco los que tienen valor numérico
+            for (indiceFilas = 0; indiceFilas < dgvDatos.Rows.Count; indiceFilas++)
+            {
+                for (indiceColumnas = 1; indiceColumnas < dgvDatos.Columns.Count; indiceColumnas++) // empieza en 1 para saltear la columna de mozos
+                {
+                    object valorCelda = dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Value;
+
+                    if (valorCelda != null && double.TryParse(valorCelda.ToString(), out double numero))
+                    {
+                        if (numero == 0)
+                        {
+                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Yellow;
+                        }
+                        else if (numero < 0)
+                        {
+                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Red;
+                        }
+                        else
+                        {
+                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.White;
+                        }
+                    }
+                    else
+                    {
+                        // Si la celda está vacía o no es un número
+                        dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.White;
+                    }
+                }
+            }
 
             //Grabamos los datos en el array
             for (int fila = 0; fila < 5; fila++)
