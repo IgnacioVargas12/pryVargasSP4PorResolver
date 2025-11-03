@@ -122,39 +122,12 @@
                 }
             }
 
+            if (!ValidarColoresYCeldas())
+                return false;
+
             //Si pasó todas las validaciones
             btnConsultarMozo.Enabled = true;
             btnConsultarTotal.Enabled = true;
-
-            //Pintamos los amarillos si tienen valor 0, y blanco los que tienen valor numérico
-            for (indiceFilas = 0; indiceFilas < dgvDatos.Rows.Count; indiceFilas++)
-            {
-                for (indiceColumnas = 1; indiceColumnas < dgvDatos.Columns.Count; indiceColumnas++) // empieza en 1 para saltear la columna de mozos
-                {
-                    object valorCelda = dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Value;
-
-                    if (valorCelda != null && double.TryParse(valorCelda.ToString(), out double numero))
-                    {
-                        if (numero == 0)
-                        {
-                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Yellow;
-                        }
-                        else if (numero < 0)
-                        {
-                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Red;
-                        }
-                        else
-                        {
-                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.White;
-                        }
-                    }
-                    else
-                    {
-                        // Si la celda está vacía o no es un número
-                        dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.White;
-                    }
-                }
-            }
 
             //Grabamos los datos en el array
             for (int fila = 0; fila < 5; fila++)
@@ -226,6 +199,51 @@
         private void btnCerrar_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private bool ValidarColoresYCeldas()
+        {
+            bool hayNegativo = false;
+
+            for (indiceFilas = 0; indiceFilas < dgvDatos.Rows.Count; indiceFilas++)
+            {
+                for (indiceColumnas = 1; indiceColumnas < dgvDatos.Columns.Count; indiceColumnas++) // ignoramos columna 0 (mozos)
+                {
+                    object valorCelda = dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Value;
+
+                    if (valorCelda != null && double.TryParse(valorCelda.ToString(), out double numero))
+                    {
+                        if (numero == 0)
+                        {
+                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Yellow;
+                        }
+                        else if (numero < 0)
+                        {
+                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Red;
+                            hayNegativo = true; // marcamos que hubo un número negativo, pero seguimos validando
+                        }
+                        else
+                        {
+                            dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.White;
+                        }
+                    }
+                    else
+                    {
+                        dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.White;
+                    }
+                }
+            }
+
+            if (hayNegativo)
+            {
+                MessageBox.Show("Se encontraron valores negativos en la grilla.",
+                    "Dato inválido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btnConsultarMozo.Enabled = false;
+                btnConsultarTotal.Enabled = false;
+                return false;
+            }
+
+            return true;
         }
     }
 }
