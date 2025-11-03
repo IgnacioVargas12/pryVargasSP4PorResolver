@@ -203,13 +203,16 @@
 
         private bool ValidarColoresYCeldas()
         {
+            //Este procedimiento exclusivamente otorga los colores a la celda y evita los números negativos
             bool hayNegativo = false;
 
             for (indiceFilas = 0; indiceFilas < dgvDatos.Rows.Count; indiceFilas++)
             {
-                for (indiceColumnas = 1; indiceColumnas < dgvDatos.Columns.Count; indiceColumnas++) // ignoramos columna 0 (mozos)
+                for (indiceColumnas = 1; indiceColumnas < dgvDatos.Columns.Count; indiceColumnas++)
                 {
                     object valorCelda = dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Value;
+                    //Utilizo el tryparse para tener una variable local donde guardar el valor de la celda
+                    //Primero convierto el valorCelda a string para poder usar el tryparse
 
                     if (valorCelda != null && double.TryParse(valorCelda.ToString(), out double numero))
                     {
@@ -220,7 +223,7 @@
                         else if (numero < 0)
                         {
                             dgvDatos.Rows[indiceFilas].Cells[indiceColumnas].Style.BackColor = Color.Red;
-                            hayNegativo = true; // marcamos que hubo un número negativo, pero seguimos validando
+                            hayNegativo = true; 
                         }
                         else
                         {
